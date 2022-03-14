@@ -2,6 +2,8 @@
 
 This repo is associated with an in prep paper: 'On the use of relative brain size'. Code can be shared and re-used, but please wait to use any of the results until a preprint has been published on BioRxiv. 
 
+All results can be reproduced by running *manuscript.Rmd*. This rmarkdown contains all R code to generate and analyse the data. The *.stan* files contain the model definitions for the Bayesian models. The files without extension are the already compiled models and can be used to speed up fitting (these are loaded automatically when the rmarkdown is run).
+
 # Requirements
 
 To run the Bayesian models *Stan* needs to be installed. This is not an R package, but *Stan* can be run from R. For installation see: https://mc-stan.org/users/interfaces/. 
