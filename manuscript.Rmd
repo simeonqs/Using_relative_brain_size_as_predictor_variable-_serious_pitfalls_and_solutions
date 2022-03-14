@@ -1,0 +1,298 @@
+---
+title: "On the use of relative brain size"
+author: "Simeon Q. Smeele $^{1,2,3}$"
+date: "March 2022"
+output:
+  pdf_document: default
+header-includes:
+- \usepackage{lineno}
+- \linenumbers
+editor_options:
+  chunk_output_type: console
+bibliography: bibliography.bib
+---
+
+```{r include=FALSE}
+# Libraries
+## cmdstanr can be installed from Cran, but you need to run 
+## library(cmstanr) and install_cmdstan() to finish installing 
+library(cmdstanr)
+library(scales)
+
+# Paths
+path_response_stan = 'response.stan'
+path_predictor_stan = 'predictor.stan'
+path_sem_stan = 'sem.stan'
+path_pdf_response = 'response.pdf'
+path_pdf_predictor = 'predictor.pdf'
+```
+
+$^1$Cognitive & Cultural Ecology Research Group, Max Planck Institute of Animal Behavior, Radolfzell, Germany
+
+$^2$Department of Human Behavior, Ecology and Culture, Max Planck Institute for Evolutionary
+Anthropology, Leipzig, Germany
+
+$^3$Department of Biology, University of Konstanz, Konstanz, Germany
+
+**Subject areas:** evolution
+
+**Keywords:**: relative brain size, comparative analysis, structural equation model, Bayesian
+
+**Author for correspondence:** Simeon Q. Smeele, ssmeele@ab.mpg.de
+
+# Abstract
+
+There is a long standing interest in the effect of relative brain size on other life history variables in a comparative context. Historically, residuals have been used to calculate these effects, but more recently it has been recognised that regression on residuals is not good practice. Instead, absolute brain size and body size are included in a single regression, with the idea that this controls for allometry. This practice leads to a second, potentially even greater estimation error when both relative brain size and body size are a cause of the third variable in question. In this study I use a simple simulation to show how the effect of body mass is masked if absolute brain size is included. I propose the use of structural equation models to simultaneously estimate relative brain size and its effect on the third variable, leaving the effect of body mass unconfounded. 
+
+# Introduction
+
+Brain size is often theorised to be important in the life history of species and has been linked to everything from innovation rates [@lefebvre2004brains], to sociality [@dunbar2007evolution] and longevity [@minias2017longevity]. It is important to note that it is often the *relative* and not the *absolute* size of the brain that is of interest. When talking about relative brain size, it is always implicit that brain size is relative to body size or a specific brain region relative to the whole brain. This to control for allometric scaling. There exists a large diversity of relative brain size measures [@healy2007critique], but some decades ago the use of residual brain size was proposed and quickly became the most popular [@jerison1973evolution]. This measure is simply the residual from a model that has log body size as predictor and log brain size as response variable. It is an intuitively attractive approach, since it seems to get at *that extra bit of brain* a species has. Multiple challenges were recognised early on. Probably the most debated is the effect of phylogeny [@armstrong1983relative]. When comparing across multiple species nested at different levels of taxonomy, how does one estimate the 'true' intercept and slope of the model? Several techniques have been proposed to mitigate this, but the debate is ongoing. 
+
+More recently another statistical caveat has been highlighted (for an overview see @freckleton2002misuse). The use of residuals is great for visualisation, but cannot be used in statistical models. The proposed solution is to simply include body size as a predictor variable in the final model, which is very similar to the use of residual brain size, if - and only if - relative brain size is the response variable. This approach takes care of both the phylogenetic signal (since models can include the phylogenetic variance-covariance matrix) and correct estimation of uncertainty. However, one major issue has been overlooked: if relative brain size is a predictor variable, including body size as a second predictor can lead to incorrect inference, because body size is not controlling for variation in brain size, as brain size is not the response variable. Brain size does, however, contain information about body size as body size is a cause of brain size. This will result in a reduction of the estimated effect of the body size. To properly include both relative brain size and body size one needs a system that contains regressions with brain size as response (of body size) and as predictor (of the third variable).
+
+A structural equation model is such a system. It contains regressions for each variable and allows brain size to be response and outcome variable simultaneously [@bowen2011structural]. Structural equation models have been used before to include relative brain size in a comparative study in combination with phylogeny, measurement error and imputation [REF own paper]. The aim of this current paper is to show the estimation error in ordinary linear regressions using a simulation and propose a simple Bayesian structural equation model as a solution that can be easily adapted to most comparative studies. 
+
+# Methods
+
+To show the difference between a case where relative brain size is the *response* variable and where it is a *predictor* variable I simulated two simple cases with three variables. To avoid discussion about directionality I have simply named the third variable *z*. To further simplify the simulation I have not attempted to simulate realistic values for body size and relative brain size, but just used values with mean = 0 and standard deviation = 1. This allows me to draw general conclusions that are not sensitive to the scale of the variables.  
+
+I simulated 20 datasets per case and present parameter estimates for all datasets. Frequentist linear models were fitted with the *lm* function from base R [@R]. Bayesian models were fitted using the *cmstanr* package [@cmdstanr], which runs the No U-turn Sampler in Stan [@gelman2015stan] with four chains and default sampler settings.
+
+## Case I: relative brain size as response variable
+
+In the first case absolute brain size is caused by body size and *z*. The interest of the study is to what extent *z* causes additional increase in brain size. In other words, to what extend *z* correlates with relative brain size. I simulated 20 data sets with 100 species with the following structure:
+
+$$\begin{aligned}
+\text{body size} & \sim \text{normal}(0,\ 1) \\
+z & \sim \text{normal}(0,\ 1) \\
+\text{brain size} & \sim \text{normal}(\mu_{brain},\ 1) \\
+\mu_{brain} & = 1 * \text{body size} + 1 * z
+\end{aligned}$$
+
+I analysed the resulting data with a frequentist linear model and with the Bayesian equivalent. Then I plotted the estimated effect of body size and *z* to show how well parameters were retrieved. 
+
+## Case II: relative brain size as predictor variable
+
+In the second case both body size and relative brain size are a predictor of *z*. The interest of the study is to what extend relative brain size causes *z*. I simulated 20 data sets with 100 species with the following structure:
+
+$$\begin{aligned}
+\text{body size} & \sim \text{normal}(0,\ 1) \\
+\text{relative brain size} & \sim \text{normal}(0,\ 1) \\
+\text{brain size} & = \text{relative brain size} + 1 * \text{body size} \\
+z & \sim \text{normal}(\mu_z,\ 1) \\
+\mu_z & = 1 * \text{body size} + 1 * \text{relative brain size}
+\end{aligned}$$
+
+I analysed the resulting data with both a frequentist and Bayesian linear model where brain size and body size were included as predictor variables. Additionally I analysed the data with a Bayesian structural equation model that included sub-models for all causal paths:
+
+$$\begin{aligned}
+\text{body size} & \sim \text{normal}(\alpha_\text{body},\ \sigma_\text{body}) \\
+\\
+\text{brain size} & \sim \text{normal}(\mu_\text{brain},\ \sigma_\text{brain}) \\
+\mu_\text{brain[i]} & = \alpha_\text{brain} + \beta_\text{body} * \text{body size}_\text{[i]} \\
+\\
+z & \sim \text{normal}(\mu_z,\ \sigma_z) \\
+\mu_{z\text{[i]}} & = \alpha_z + \zeta_\text{body} * \text{body size}_\text{[i]} + \zeta_\text{brain} * (\text{brain size}_\text{[i]} - \mu_\text{brain[i]})\\
+\\
+\alpha_\text{body},\ \alpha_\text{brain},\ \alpha_z  & \sim \text{normal}(0,\ 1)\\
+\beta_\text{body},\ \zeta_\text{body},\ \zeta_\text{brain} & \sim \text{normal}(0,\ 1)\\
+\sigma_\text{body},\ \sigma_\text{brain},\ \sigma_z & \sim \text{exponential}(1)\\
+\end{aligned}$$
+
+The model includes a regression for each variable. Body size is not a function of any variable. Brain size is a function of body size. *z* is a function of body size and relative brain size (where relative brain size is the difference between the actual and expected brain size). The last three lines are the priors for all parameters. Note that the priors for the slopes ($\beta$ and $\zeta$) are set to normal(0, 1), which regularises them slightly and assumes no effect of the predictors. For empirical studies theory might provide more informative priors, which would further increase the accuracy of the model. 
+
+# Results
+
+For the Case I, were relative brain size was the response variable, both models estimated the parameters very well (see Figure 1). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 2). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
+
+```{r response, include=FALSE}
+# Settings
+set.seed(1)
+N = 100
+z_effect = 1
+body_effect = 1
+model_response = cmdstan_model(path_response_stan)
+
+# Simulate data 20 times
+out = lapply(1:20, function(i){
+  body_size = rnorm(N, 1, 1)
+  z = rnorm(N, 0, 1)
+  mu_brain = body_effect * body_size + z_effect * z
+  brain_size = rnorm(N, mu_brain, 1)
+  
+  # Run linear model
+  linear_fit = lm(brain_size ~ body_size + z)
+  
+  # Run Bayesian linear model
+  d = list(N = N, brain_size = brain_size, body_size = body_size, z = z) # save data as list
+  bay_linear_fit = model_response$sample(data = d, # run model
+                                         seed = 1, 
+                                         chains = 4, 
+                                         parallel_chains = 4, # runs on four threads
+                                         refresh = 2000)
+  post_linear_fit = bay_linear_fit$draws(format = 'draws_df') # draw posterior samples
+  
+  return(list(linear_fit = linear_fit, post_linear_fit = post_linear_fit))
+})
+
+# Plot the fit
+pdf(path_pdf_response, 6, 5)
+par(mfrow = c(2,2), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), xlab = '', yaxt = 'n', main = 'linear model')
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect z', 1, 2.5)
+abline(v = z_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                   summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                     pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+mtext('z', 2, 3, font = 2, las = 2, adj = 0)
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+abline(v = z_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_z), pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect z', 1, 2.5)
+
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = '')
+abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2], 
+                                   summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                     pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+mtext('body', 2, 3, font = 2, las = 2, adj = 0)
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect body size', 1, 2.5)
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = '')
+abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect body size', 1, 2.5)
+dev.off()
+```
+
+```{r plot response, echo=FALSE, out.width = "50%", fig.cap= "Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions for the Bayesian models."}
+knitr::include_graphics(path_pdf_response)
+```
+
+
+```{r predictor, include=FALSE}
+# Settings
+set.seed(1)
+N = 100
+brain_effect = 1
+body_effect = 1
+model_predictor = cmdstan_model(path_predictor_stan)
+model_sem = cmdstan_model(path_sem_stan)
+
+# Simulate data
+out = lapply(1:20, function(i){
+  body_size = rnorm(N, 0, 1)
+  rel_brain_size = rnorm(N, 0, 1)
+  brain_size = 1 * body_size + rel_brain_size
+  mu_z = body_effect * body_size + brain_effect * rel_brain_size
+  z = rnorm(N, mu_z, 1)
+  
+  # Run linear model
+  linear_fit = lm(z ~ body_size + brain_size)
+  
+  # Run Bayesian linear model
+  d = list(N = N, brain_size = brain_size, body_size = body_size, z = z)
+  bay_linear_fit = model_predictor$sample(data = d, 
+                                          seed = 1, 
+                                          chains = 4, 
+                                          parallel_chains = 4,
+                                          refresh = 2000)
+  post_linear_fit = bay_linear_fit$draws(format = 'draws_df')
+  
+  # Run Bayesian SEM
+  bay_sem_fit = model_sem$sample(data = d, 
+                                 seed = 1, 
+                                 chains = 4, 
+                                 parallel_chains = 4,
+                                 refresh = 2000)
+  post_sem_fit = bay_sem_fit$draws(format = 'draws_df')
+  
+  return(list(linear_fit = linear_fit, post_linear_fit = post_linear_fit, post_sem_fit = post_sem_fit))
+})
+
+
+# Plot the fit
+pdf(path_pdf_predictor, 9, 5)
+par(mfrow = c(2,3), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = 'linear model')
+abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                   summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                     pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect brain size', 1, 2.5)
+mtext('brain', 2, 4, font = 2, las = 2, adj = 0)
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_brain), pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect brain size', 1, 2.5)
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = 'Bayesian SEM model')
+abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_brain_z), pch = 16, cex = 3, col = alpha('#16A085', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect brain size', 1, 2.5)
+
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = '')
+abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2],
+                                   summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                     pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect body size', 1, 2.5)
+mtext('body', 2, 4, font = 2, las = 2, adj = 0)
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = '')
+abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect body size', 1, 2.5)
+plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
+     xlab = '', yaxt = 'n', main = '')
+abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_body_z), pch = 16, cex = 3, col = alpha('#16A085', 0.5))
+axis(4)
+mtext('density', 4, 2.5)
+mtext('effect body size', 1, 2.5)
+dev.off()
+```
+
+```{r plot predictor, echo=FALSE, out.width = "72%", fig.cap= "Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model (SEM) with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions for the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor)
+```
+
+# Discussion 
+
+Several recent studies have claimed to study the effect of relative brain size by including both absolute brain size and body size as predictors [@street2017coevolution; @gonzalez2010large; @isler2009why]. These studies also reported the direct effect of body size and sometimes drew conclusions based on the sign of this effect. Since all these studies used some version of a linear model (be it phylogenetic and/or Bayesian), they actually tested the effect of absolute brain size, as including body size only accounts for allometry in the response variable.  The simulations in this paper showed that including body mass as additional predictor to control for allometric scaling of brain size works well if relative brain size is the response variable, but not when relative brain size is a predictor variable. Perhaps counter-intuitively, the effect of brain size was still estimated correctly by all models. It was the body size effect that was biased in the linear models. The use of such models would lead to the incorrect inference that there was no effect of body size at all. 
+
+One way to create some intuition about what is going on is that absolute brain size (which was the actual predictor variable included in the linear models) contains information about both body size and relative brain size. In a sense this variable controls for the body size effect already, leaving the direct effect of body size 0. In a case where body size itself does not have an effect on *z*, it does not actually need to be included at all. Using absolute brain size would be fine. The variation in brain size due to allometric scaling would just create noise. Using absolute brain size would of course lead to a less precise estimate of the effect of brain size, so using relative brain size from a structural equation model would still be preferable. By presenting a simple version of such a model, I hope to encourage future work to adopt this practice to ensure that all parameter estimates, and the inference drawn based on these, are statistically sound.
+
+**Data accessibility.** All data is generated in the simulation. Code is publicly available at: https://github.com/simeonqs/On_the_use_of_relative_brain_size.
+
+**Competing interests.** I declare I have no competing interests.
+
+**Funding.** I received funding from the International Max Planck Research School for Quantitative Behaviour, Ecology and Evolution. 
+
+**Acknowledgements.** XXX
+
+
+# References
