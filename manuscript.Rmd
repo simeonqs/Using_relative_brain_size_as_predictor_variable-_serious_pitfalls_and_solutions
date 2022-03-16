@@ -3,6 +3,7 @@ title: "On the use of relative brain size"
 author: "Simeon Q. Smeele $^{1,2,3}$"
 date: "March 2022"
 output:
+  word_document: default
   pdf_document: default
 header-includes:
 - \usepackage{lineno}
@@ -37,7 +38,7 @@ $^3$Department of Biology, University of Konstanz, Konstanz, Germany
 
 **Subject areas:** evolution
 
-**Keywords:**: relative brain size, comparative analysis, structural equation model, Bayesian
+**Keywords:** relative brain size, comparative analysis, structural equation model, Bayesian
 
 **Author for correspondence:** Simeon Q. Smeele, ssmeele@ab.mpg.de
 
@@ -104,7 +105,7 @@ The model includes a regression for each variable. Body size is not a function o
 
 # Results
 
-For Case I, were relative brain size was the response variable, both models estimated the parameters very well (see Figure 1). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 2). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
+For Case I, where relative brain size was the response variable, both models estimated the parameters very well (see Figure 1). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 2). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
 
 ```{r response, include=FALSE}
 # Settings
@@ -285,7 +286,7 @@ knitr::include_graphics(path_pdf_predictor)
 
 Several recent studies have claimed to study the effect of relative brain size by including both absolute brain size and body size as predictors [@street2017coevolution; @gonzalez2010large; @isler2009why]. These studies also reported the direct effect of body size and sometimes drew conclusions based on the sign of this effect. Since all these studies used some version of a linear model (be it phylogenetic and/or Bayesian), they actually tested the effect of absolute brain size, as including body size only accounts for allometry in the response variable.  The simulations in this paper showed that including body mass as additional predictor to control for allometric scaling of brain size works well if relative brain size is the response variable, but not if relative brain size is a predictor variable. Perhaps counter-intuitively, the effect of brain size was still estimated correctly by all models. It was the body size effect that was biased in the linear models. The use of such models would lead to the incorrect inference that there was no effect of body size at all. 
 
-One way to create some intuition about what is going on is that absolute brain size (which was the actual predictor variable included in the linear models) contains information about both body size and relative brain size. In a sense this variable controls for the body size effect already, leaving the direct effect of body size 0. In a case where body size itself does not have an effect on *z*, it does not actually need to be included at all. Using absolute brain size would be fine. The variation in brain size due to allometric scaling would just create noise. Using absolute brain size would of course lead to a less precise estimate of the effect of brain size, so using relative brain size from a structural equation model would still be preferable. The use of these models are not limited to relative brain size, but can be used for any comparative study in which multiple causal paths are of interest.  
+One way to create some intuition about what is going on is that absolute brain size (which was the actual predictor variable included in the linear models) contains information about both body size and relative brain size. In a sense this variable controls for the body size effect already, leaving the direct effect of body size 0. In a case where body size itself does not have an effect on *z*, it does not actually need to be included at all. Using absolute brain size would be fine. The variation in brain size due to allometric scaling would just create noise. Using absolute brain size would of course lead to a less precise estimate of the effect of brain size, so using relative brain size from a structural equation model would still be preferable. The use of these models is not limited to relative brain size, but can be used for any comparative study in which multiple causal paths are of interest.  
 
 **Data accessibility.** All data is generated in the simulation. Code is publicly available at: https://github.com/simeonqs/On_the_use_of_relative_brain_size.
 
