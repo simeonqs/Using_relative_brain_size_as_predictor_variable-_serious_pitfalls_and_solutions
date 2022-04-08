@@ -1,10 +1,10 @@
 ---
 title: "On the use of relative brain size"
 author: "Simeon Q. Smeele $^{1,2,3}$"
-date: "March 2022"
+date: "April 2022"
 output:
-  word_document: default
   pdf_document: default
+  word_document: default
 header-includes:
 - \usepackage{lineno}
 - \linenumbers
@@ -18,13 +18,14 @@ bibliography: bibliography.bib
 ## for installation instructions see the README
 library(cmdstanr)
 library(scales)
+library(daggity)
 
 # Paths
 path_response_stan = 'response.stan' # models
 path_predictor_stan = 'predictor.stan'
 path_sem_stan = 'sem.stan'
-path_pdf_response = 'response.pdf' # pdfs
-path_pdf_predictor = 'predictor.pdf'
+path_pdf_response = 'figures/response.pdf' # pdfs
+path_pdf_predictor = 'figures/predictor.pdf'
 ```
 
 $^1$Cognitive & Cultural Ecology Research Group, Max Planck Institute of Animal Behavior, Radolfzell, Germany
@@ -54,11 +55,19 @@ More recently another statistical caveat has been highlighted (for an overview s
 
 A structural equation model is such a system. It contains regressions for each variable and allows brain size to be response and outcome variable simultaneously [@bowen2011structural]. Structural equation models have been used before to include relative brain size in a comparative study in combination with phylogeny, measurement error and imputation [@smeele2021coevolution]. The aim of this current paper is to show the estimation error in ordinary linear regressions using a simulation and propose a simple Bayesian structural equation model as a solution that can be easily adapted to most comparative studies. 
 
+```{r echo=FALSE}
+# Make DAG
+dag <- dagitty("dag {body_size -> relative_brain_size <- z}")
+plot( graphLayout( dag ) )
+```
+
 # Methods
 
 To show the difference between a case where relative brain size is the *response* variable and where it is a *predictor* variable I simulated two simple cases with three variables. To avoid discussion about directionality I have simply named the third variable *z*. To further simplify the simulation I have not attempted to simulate realistic values for body size and relative brain size, but just used values with mean = 0 and standard deviation = 1. This allows me to draw general conclusions that are not sensitive to the scale of the variables.  
 
-I simulated 20 datasets per case and present parameter estimates for all datasets. Frequentist linear models were fitted with the *lm* function from base R [@R]. Bayesian models were fitted using the *cmstanr* package [@cmdstanr], which runs the No U-turn Sampler in Stan [@gelman2015stan] with four chains and default sampler settings.
+I simulated 20 datasets per case and present parameter estimates for all datasets. Frequentist linear models were fitted with the *lm* function from base R [@R]. Bayesian models were fitted using the *cmstanr* package [@cmdstanr], which runs the No U-turn Sampler in Stan [@gelman2015stan] with four chains and default sampler settings (1000 warmup and 1000 sampling iterations). Rhat, divergent transitions and effective sample size were monitored by the package and any issues were reported. 
+
+To test if sample size had an effect on which model performed best, additional simulations were run and analysed for 20 and 1000 species (see supplemental results). To test if better or worse priors had an affect on which model performed best, and the performance of the best model, additional simulations were run with informative and vague priors (see supplemental materials).
 
 ## Case I: relative brain size as response variable
 
@@ -106,6 +115,8 @@ The model includes a regression for each variable. Body size is not a function o
 # Results
 
 For Case I, where relative brain size was the response variable, both models estimated the parameters very well (see Figure 1). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 2). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
+
+Results were similar for simulations with smaller and larger sample sizes (see supplemental materials. Results were also similar for models with vague and informative prior (see supplemental materials). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the correct value as prior, it estimates the effect to be absent.  
 
 ```{r response, include=FALSE}
 # Settings
@@ -180,7 +191,6 @@ dev.off()
 ```{r plot response, echo=FALSE, out.width = "50%", fig.cap= "Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_response)
 ```
-
 
 ```{r predictor, include=FALSE}
 # Settings
