@@ -8,6 +8,8 @@ Smeele, Simeon Q. "On the use of relative brain size." bioRxiv (2022).
 
 All results can be reproduced by running *manuscript.Rmd*. This rmarkdown contains all R code to generate and analyse the data. The *.stan* files contain the model definitions for the Bayesian models. The files without extension are the already compiled models and can be used to speed up fitting (these are loaded automatically when the rmarkdown is run).
 
+**Note:** I'm currently revising the manuscript for resubmission. An updated repo with complete file overview will be online soon.
+
 ------------------------------------------------
 
 # Requirements
