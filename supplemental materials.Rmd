@@ -7,6 +7,12 @@ output:
 header-includes:
 - \usepackage{lineno}
 - \linenumbers
+- \renewcommand{\figurename}{Figure S}
+- \makeatletter
+- \def\fnum@figure{\figurename\thefigure}
+- \makeatother
+- \usepackage{setspace}
+- \doublespacing
 editor_options:
   chunk_output_type: console
 bibliography: bibliography.bib
@@ -53,11 +59,9 @@ The main text contained results for Bayesian models with slightly regularising p
 
 To further test the robustness of the models I analysed the data with vague priors, settings intercept and slope to normal(0, 10) and standard variation parameters to exponential(0.1) (note that the mean for the exponential distribution is the inverse of the rate, such that the mean standard deviation here is 10).
 
+\pagebreak
+
 # Results
-
-## Sample size
-
-### Case I: relative brain size as response variable
 
 ```{r response-sampsize, include=FALSE}
 for(N in c(20, 1000)){
@@ -132,15 +136,13 @@ for(N in c(20, 1000)){
 }
 ```
 
-```{r plot response-20, echo=FALSE, out.width = "50%", fig.cap= "Model with sample size 20. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot response-20, echo=FALSE, out.width = "45%", fig.cap= "Model with sample size 20. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_response_20)
 ```
 
-```{r plot response-1000, echo=FALSE, out.width = "50%", fig.cap= "Model with sample size 1000. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot response-1000, echo=FALSE, out.width = "45%", fig.cap= "Model with sample size 1000. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_response_1000)
 ```
-
-### Case II: relative brain size as predictor variable
 
 ```{r predictor-sampsize, include=FALSE}
 for(N in c(20, 1000)){
@@ -245,17 +247,13 @@ for(N in c(20, 1000)){
 }
 ```
 
-```{r plot predictor-20, echo=FALSE, out.width = "72%", fig.cap= "Model with sample size 20. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model (SEM) with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot predictor-20, echo=FALSE, out.width = "65%", fig.cap= "Model with sample size 20. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model  with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_predictor_20)
 ```
 
-```{r plot predictor-1000, echo=FALSE, out.width = "72%", fig.cap= "Model with sample size 1000. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model (SEM) with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot predictor-1000, echo=FALSE, out.width = "65%", fig.cap= "Model with sample size 1000. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model  with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_predictor_1000)
 ```
-
-## Priors
-
-### Case I: relative brain size as response variable
 
 ```{r response-prior, include=FALSE}
 for(prior_type in c('informative', 'vague')){
@@ -332,15 +330,13 @@ for(prior_type in c('informative', 'vague')){
 }
 ```
 
-```{r plot response-informative, echo=FALSE, out.width = "50%", fig.cap= "Model with informative priors. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot response-informative, echo=FALSE, out.width = "45%", fig.cap= "Model with informative priors. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_response_informative)
 ```
 
-```{r plot response-vague, echo=FALSE, out.width = "50%", fig.cap= "Model with vague priors. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot response-vague, echo=FALSE, out.width = "45%", fig.cap= "Model with vague priors. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_response_vague)
 ```
-
-### Case II: relative brain size as predictor variable
 
 ```{r predictor-prior, include=FALSE}
 for(prior_type in c('informative', 'vague')){
@@ -446,12 +442,10 @@ for(prior_type in c('informative', 'vague')){
 }
 ```
 
-```{r plot predictor-informative, echo=FALSE, out.width = "72%", fig.cap= "Model with informative priors. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model (SEM) with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot predictor-informative, echo=FALSE, out.width = "65%", fig.cap= "Model with informative priors. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model  with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_predictor_informative)
 ```
 
-```{r plot predictor-vague, echo=FALSE, out.width = "72%", fig.cap= "Model with vague priors. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model (SEM) with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot predictor-vague, echo=FALSE, out.width = "65%", fig.cap= "Model with vague priors. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model  with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_predictor_vague)
 ```
-
-
