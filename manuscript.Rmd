@@ -1,7 +1,6 @@
 ---
 title: "On the use of relative brain size"
 author: "Simeon Q. Smeele $^{1,2,3}$"
-date: "April 2022"
 output:
   pdf_document: default
   word_document: default
@@ -36,8 +35,6 @@ $^2$Department of Human Behavior, Ecology and Culture, Max Planck Institute for 
 Anthropology, Leipzig, Germany
 
 $^3$Department of Biology, University of Konstanz, Konstanz, Germany
-
-**ORCID:** 0000-0003-1001-6615
 
 **Keywords:** Bayesian statistics, comparative analysis, multiple regression, relative brain size, structural equation model
 
@@ -124,7 +121,7 @@ The model includes a regression for each variable. Body size is not a function o
 
 For Case I, where relative brain size was the response variable, both models estimated the parameters very well (see Figure 2). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 3). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
 
-Results were similar for simulations with smaller and larger sample sizes (see supplemental materials). Results were also similar for models with vague and informative prior (see supplemental materials). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the correct value as prior, it estimates the effect to be absent.  
+Results were similar for simulations with smaller and larger sample sizes (see supplemental materials, Figure S1-4). Results were also similar for models with vague and informative prior (see supplemental materials, Figure S5-8). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the correct value as prior, it estimates the effect to be absent.  
 
 ```{r response, include=FALSE}
 # Settings
@@ -317,12 +314,14 @@ Structural equation models allow for the inclusion of measurement error, imputat
 
 The aim of this paper was to show how a case where relative brain size is a response variable differs from a case where it is a predictor variable. From a simple simulation it becomes clear that one cannot include absolute brain size and body size as covariates if relative brain size is theorised to predict the third variable. Multiple other approaches can be used instead and the design of the model should be based on the assumed causal structure of the system. I provide a simple structural equation model, which works for the simulated data. Future studies should make sure all back-door paths are closed for their DAG and potentially include additional components to control for measurement error, missing data and phylogeny.  The use of these models is not limited to relative brain size, but can be used for any comparative study in which multiple causal paths are of interest.   
 
+**Acknowledgements.** I would like to thank all anonymous reviewers for valuable input. Their contribution helped to clarify the manuscript and gain new insights. 
+
 **Data accessibility.** All data is generated in the simulation. Code is publicly available at: https://github.com/simeonqs/On_the_use_of_relative_brain_size.
 
 **Competing interests.** I declare I have no competing interests.
 
 **Funding.** I received funding from the International Max Planck Research School for Quantitative Behaviour, Ecology and Evolution. 
 
-**Acknowledgements.** I would like to thank all anonymous reviewers for valuable input. Their contribution helped to clarify the manuscript and gain new insights. 
+**ORCID:** 0000-0003-1001-6615
 
 # References
