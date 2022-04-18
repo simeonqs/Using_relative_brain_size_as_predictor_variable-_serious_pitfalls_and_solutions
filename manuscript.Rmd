@@ -8,6 +8,8 @@ output:
 header-includes:
 - \usepackage{lineno}
 - \linenumbers
+- \usepackage{setspace}
+- \doublespacing
 editor_options:
   chunk_output_type: console
 bibliography: bibliography.bib
@@ -37,15 +39,19 @@ $^3$Department of Biology, University of Konstanz, Konstanz, Germany
 
 **ORCID:** 0000-0003-1001-6615
 
-**Subject areas:** evolution
-
-**Keywords:** relative brain size, comparative analysis, structural equation model, Bayesian
+**Keywords:** Bayesian statistics, comparative analysis, multiple regression, relative brain size, structural equation model
 
 **Author for correspondence:** Simeon Q. Smeele, ssmeele@ab.mpg.de
 
 # Abstract
 
-There is a long standing interest in the effect of relative brain size on other life history variables in a comparative context. Historically, residuals have been used to calculate these effects, but more recently it has been recognised that regression on residuals is not good practice. Instead, absolute brain size and body size are included in a single regression, with the idea that this controls for allometry. This practice leads to a second, potentially even greater estimation error when both relative brain size and body size are a cause of the third variable in question. In this study I use a simple simulation to show how the effect of body mass is masked if absolute brain size is included. I propose the use of structural equation models to simultaneously estimate relative brain size and its effect on the third variable, leaving the effect of body mass unconfounded. 
+1. There is a long standing interest in the effect of relative brain size on other life history variables in a comparative context. Historically, residuals have been used to calculate these effects, but more recently it has been recognised that regression on residuals is not good practice. Instead, absolute brain size and body size are included in a multiple regression, with the idea that this controls for allometry.
+
+2. I use a simple simulation to illustrate how a case with brain size as response variable differs from a case with relative brain size as predictor variable. I use the simulated data to test which modelling approach can estimate the underlying causal effects for each case.
+
+3. The results show that a multiple regression models with both body size and another variable as predictor variable and brain size as response variable work well. However, if relative brain size is a predictor variable, a multiple regression fails to correctly estimate the effects. 
+
+4. I propose the use of structural equation models to simultaneously estimate relative brain size and its effect on the third variable and discuss other potential methods.
 
 # Introduction
 
@@ -57,9 +63,9 @@ To point out the difference between the case with relative brain size as respons
 
 The second case is causally more opaque (see Figure 1b). In general the question of interest is how cognitive ability influences the third variable *z*. But since this cannot be measured reliably across species (therefore denoted by a U for unobserved), relative brain size is used as a proxy. This is where it becomes tricky. The assumption is that it is the *extra bit of brain* that is caused by the need for cognitive ability. And it is therefore *relative* brain size that needs to be included as proxy. The variable we initially measured is *absolute* brain size, and is a collider in this DAG. A collider is a variable that is caused by two or more other variables. When including a collider in the analysis it *opens up* a back-door path, in our case through body size. This is problematic, because the estimated effect of brain size on *z* now also contains some of the effect of body size on *z*. Therefore the estimated effect of body size on *z* will be biased. There is no way to correct for this using the variables in the DAG in a multiple regression. To include both relative brain size and body size one needs a system that contains regressions with brain size as response (of body size) and as predictor (of the third variable).
 
-A structural equation model is such a system. It contains regressions for each variable and allows brain size to be response and predictor variable simultaneously [@bowen2011structural]. When fitted using a Bayesian approach, information flows in both directions, since the likelihood is computed for the whole system at each step. The aim of this paper is to show the estimation error in ordinary linear regressions using a simulation and propose a simple Bayesian structural equation model as a solution that can be easily adapted to most comparative studies. I also provide a version of the structural equation model with *ulam* from the *rethinking* package as front-end [@rethinking] so that models can be adapted within the R environment. 
+A structural equation model is such a system. It contains regressions for each variable and allows brain size to be response and predictor variable simultaneously [@bowen2011structural]. When fitted using a Bayesian approach, information flows in both directions, since the likelihood is computed for the whole system at each step. The aim of this paper is to show the estimation error in multiple linear regressions using a simulation and propose a simple Bayesian structural equation model as a solution that can be easily adapted to most comparative studies. I also provide a version of the structural equation model with *ulam* from the *rethinking* package as front-end [@rethinking] so that models can be adapted within the R environment. 
 
-```{r dag, echo=FALSE, out.width = "100%", fig.cap= "Directed Acyclic Graph of the two cases. Arrows indicatethe direction of causality. *z* stands for the third variable of interest. a) Case I: brain size is the reponse variable. b) Case II: relative brain size is a predictor variable. U stands for the unobserved variable cognitive ability."}
+```{r dag, echo=FALSE, out.width = "100%", fig.cap= "Directed Acyclic Graph of the two cases. Arrows indicatethe direction of causality. z stands for the third variable of interest. a) Case I: brain size is the reponse variable. b) Case II: relative brain size is a proxy predictor variable. U stands for the unobserved variable cognitive ability."}
 knitr::include_graphics(path_pdf_DAG)
 ```
 
@@ -67,7 +73,7 @@ knitr::include_graphics(path_pdf_DAG)
 
 To show the difference between a case where relative brain size is the *response* variable and where it is a *predictor* variable I simulated two simple cases with three variables. To simplify the simulation I have not attempted to simulate realistic values for body size and relative brain size, but just used values with mean = 0 and standard deviation = 1. This allows me to draw general conclusions that are not sensitive to the scale of the variables.
 
-I simulated 20 datasets per case and present parameter estimates for all datasets. Frequentist linear models were fitted with the *lm* function from base R [@R]. Bayesian models were fitted using the *cmstanr* package [@cmdstanr], which runs the No U-turn Sampler in Stan [@gelman2015stan] with four chains and default sampler settings (1000 warmup and 1000 sampling iterations). Rhat, divergent transitions and effective sample size were monitored by the package and any issues were reported. 
+I simulated 20 datasets per case and present parameter estimates for all datasets. Frequentist linear models were fitted with the *lm* function from R [@R]. Bayesian models were fitted using the *cmstanr* package [@cmdstanr], which runs the No U-turn Sampler in Stan [@gelman2015stan] with four chains and default sampler settings (1000 warmup and 1000 sampling iterations). Rhat, divergent transitions and effective sample size were monitored by the package and any issues were reported. 
 
 To test if sample size had an effect on which model performed best, additional simulations were run and analysed for 20 and 1000 species (see supplemental results). To test if more or less informative priors had an affect on which model performed best, and the performance of the best model, additional simulations were run with informative and vague priors (see supplemental materials).
 
@@ -86,12 +92,12 @@ I analysed the resulting data with a frequentist linear model and with the Bayes
 
 ## Case II: relative brain size as predictor variable
 
-In the second case both body size and relative brain size are a predictor of *z*. The interest of the study is to what extend relative brain size causes *z*. I simulated 20 data sets with 100 species with the following structure:
+In the second case both body size and relative brain size are a predictor of *z*. For simplicity I removed the unobserved variable from the simulation, and instead included a direct effect of relative brain size on z and absolute brain size. This would still be realistic when considering developmental time as a function of body size and relative brain size. The interest of the study is therefore to what extend relative brain size causes *z*. I simulated 20 data sets with 100 species with the following structure:
 
 $$\begin{aligned}
 \text{body size} & \sim \text{normal}(0,\ 1) \\
 \text{relative brain size} & \sim \text{normal}(0,\ 1) \\
-\text{brain size} & = \text{relative brain size} + 1 * \text{body size} \\
+\text{brain size} & = 1 * \text{relative brain size} + 1 * \text{body size} \\
 z & \sim \text{normal}(\mu_z,\ 1) \\
 \mu_z & = 1 * \text{body size} + 1 * \text{relative brain size}
 \end{aligned}$$
@@ -112,13 +118,13 @@ z & \sim \text{normal}(\mu_z,\ \sigma_z) \\
 \sigma_\text{body},\ \sigma_\text{brain},\ \sigma_z & \sim \text{exponential}(1)\\
 \end{aligned}$$
 
-The model includes a regression for each variable. Body size is not a function of any variable. Brain size is a function of body size. *z* is a function of body size and relative brain size (where relative brain size is the difference between the actual and expected brain size). Relative brain size in this model is very similar to residual brain size, but since it is computed at each iteration information flows in both directions and measurement error is correctly estimated. The last three lines of the model are the priors for all parameters. Note that the priors for the slopes ($\beta$ and $\gamma$) are set to normal(0, 1), which regularises them slightly and assumes no effect of the predictors. For empirical studies theory might provide more informative priors, which would further increase the accuracy of the model. 
+The model includes a regression for each variable. Body size is not a function of any variable. Brain size is a function of body size. *z* is a function of body size and relative brain size (where relative brain size is the difference between the actual and predicted brain size). Relative brain size in this model is very similar to residual brain size, but since it is computed at each iteration information flows in both directions and measurement error is correctly estimated. The last three lines of the model are the priors for all parameters. Note that the priors for the slopes ($\beta$ and $\gamma$) are set to normal(0, 1), which regularises them slightly and assumes no effect of the predictors. For empirical studies theory might provide more informative priors, which would further increase the accuracy of the model. 
 
 # Results
 
 For Case I, where relative brain size was the response variable, both models estimated the parameters very well (see Figure 2). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 3). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
 
-Results were similar for simulations with smaller and larger sample sizes (see supplemental materials. Results were also similar for models with vague and informative prior (see supplemental materials). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the correct value as prior, it estimates the effect to be absent.  
+Results were similar for simulations with smaller and larger sample sizes (see supplemental materials). Results were also similar for models with vague and informative prior (see supplemental materials). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the correct value as prior, it estimates the effect to be absent.  
 
 ```{r response, include=FALSE}
 # Settings
@@ -151,7 +157,7 @@ out = lapply(1:20, function(i){
 })
 
 # Plot the fit
-pdf(path_pdf_response, 6, 5)
+pdf(path_pdf_response, 7, 5.5)
 par(mfrow = c(2,2), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
 plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), xlab = '', yaxt = 'n', main = 'linear model')
 axis(4)
@@ -190,7 +196,7 @@ mtext('effect body size', 1, 2.5)
 dev.off()
 ```
 
-```{r plot response, echo=FALSE, out.width = "75%", fig.cap= "Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot response, echo=FALSE, out.width = "72%", fig.cap= "Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian model."}
 knitr::include_graphics(path_pdf_response)
 ```
 
@@ -237,7 +243,7 @@ out = lapply(1:20, function(i){
 })
 
 # Plot the fit
-pdf(path_pdf_predictor, 9, 5)
+pdf(path_pdf_predictor, 9, 4.8)
 par(mfrow = c(2,3), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
 plot(NULL, xlim = c(-0.5, 1.5), ylim = c(0, 5), 
      xlab = '', yaxt = 'n', main = 'linear model')
@@ -291,7 +297,7 @@ mtext('effect body size', 1, 2.5)
 dev.off()
 ```
 
-```{r plot predictor, echo=FALSE, out.width = "100%", fig.cap= "Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model (SEM) with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+```{r plot predictor, echo=FALSE, out.width = "100%", fig.cap= "Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
 knitr::include_graphics(path_pdf_predictor)
 ```
 
@@ -299,17 +305,17 @@ knitr::include_graphics(path_pdf_predictor)
 
 Several recent studies have claimed to study the effect of relative brain size by including both absolute brain size and body size as predictors [@street2017coevolution; @gonzalez2010large; @isler2009why]. These studies also reported the direct effect of body size and sometimes drew conclusions based on the sign of this effect. Since all these studies used some version of a linear model (be it phylogenetic and/or Bayesian), they actually tested the effect of absolute brain size, since including body size only accounts for allometry in the response variable. The simulations in this paper showed that including body size as additional predictor to control for allometric scaling of brain size works well if relative brain size is the response variable, but not if relative brain size is a predictor variable. Perhaps counter-intuitively, the effect of brain size was still estimated correctly by all models. It was the body size effect that was biased in the linear models. The use of such models would lead to the incorrect inference that there was no effect of body size at all. 
 
-One way to create some intuition about what is going on is that absolute brain size (which was the actual predictor variable included in the linear models) contains information about both body size and relative brain size. In a sense this variable controls for the body size effect already, leaving the direct effect of body size zero. In a case where body size itself does not have an effect on *z*, it does not actually need to be included at all. Using absolute brain size would be fine. The variation in brain size due to allometric scaling would just create noise. Using absolute brain size would of course lead to a less precise estimate of the effect of brain size, so using relative brain size from a structural equation model would still be preferable. The use of these models is not limited to relative brain size, but can be used for any comparative study in which multiple causal paths are of interest.  
+One way to create some intuition about what is going on is that absolute brain size (which was the actual predictor variable included in the linear models) contains information about both body size and relative brain size. In a sense this variable controls for the body size effect already, leaving the direct effect of body size zero. In a case where body size itself does not have an effect on *z*, it does not actually need to be included at all. Using absolute brain size would be fine. The variation in brain size due to allometric scaling would just create noise. Using absolute brain size would of course lead to a less precise estimate of the effect of brain size, so using relative brain size from a structural equation model would still be preferable.  
 
 Structural equation models are similar to phylogenetic path analysis [@gonzalez2014introduction] and multivariate regressions [@izenman2013multivariate]. However, both these techniques do not allow the inclusion of the difference between the observed and predicted brain size from one model as predictor for a second model. A potentially even more powerful approach was put forward by @smaers2009inferring and involves reconstructing the ancestral states of both body size and brain size. Recently this approach was used to test brain evolution in mammals and it was shown that relatively large brains can be achieved by highly divergent paths [@smaers2021evolution]. The authors contest the notion that there is a universal scaling between body and brain size, and instead propose that relatively large brains can just as well be a result of selection towards smaller bodies. Despite this observation, there might still be value in the use of relative brain size for two reasons. First, the largest non-cognitive effects were due to a shift in the slope of the body to brain relation. Such a shift would be less likely to affect results when considering a lower order taxonomic group (e.g., only primates) and could be partially accounted for by including multiple slopes (e.g., one per family). Second, running a Bayesian multiregime OU modeling approach is not straightforward and becomes really difficult when many covariates are included. The best compromise is to first study the allometric patterns in the taxon of interest and then decide if residual brain size can be used as proxy for cognitive ability. 
 
-For this paper I drew all variables from normal distributions with zero mean and standard deviation one. I furthermore simulated *z* as a function of relative brain size, rather than brain size and *z* as a function of the unobserved cognitive ability (as depicted in Figure 1b). I chose to do this to illustrate that even under these simple conditions a linear model cannot estimate the effect of body size correctly. In empirical studies, the exact causal structure will be different, but the general observation that one cannot control for body size in a linear model when relative brain size is theorised to predict *z* still stands. A regular confounder check as described by @laubach2021biologist should inform the design of the model. One example of relative brain size as predictor variable is the study of life history and innovativeness. @sol2016life suggested that relative brain size predicts both the innovation propensity and maximum life span of birds. They recognised the critique on using residuals, but decided to still use this approach, because they wanted to remove the allometric effects from brain size and not from innovation propensity. This was a valid argument since the orginal critique assumed a case where $x_1$ and $x_2$ are both causing $y$ [@freckleton2002misuse]. When $x_1$ and $x_2$ are correlated, the use of a residual of $y \sim x_1$ creates a bias. In the case of life history and innovativeness the causal structure is different and this particular problem does not arise. However, in an empirical study measurement error, missing data and phylogenetic covariance still need to be accounted for and using residuals uncertainty does not propagate because models are run sequentially. 
+For this paper I drew all variables from normal distributions with zero mean and standard deviation one. I furthermore simulated *z* as a function of relative brain size, rather than simulating both *z* and brain size as a function of the unobserved cognitive ability (as depicted in Figure 1b). I chose to do this to illustrate that even under these simple conditions a multiple linear regression cannot estimate the effect of body size correctly. In empirical studies the exact causal structure will be different, but the general observation that one cannot control for allometry in a multiple linear regression when brain size is not the response variable still stands. A regular confounder check as described by @laubach2021biologist should inform the design of the model. One example of relative brain size as predictor variable is the study of life history and innovativeness. @sol2016life suggested that relative brain size predicts both the innovation propensity and maximum life span of birds. They recognised the critique on using residuals, but still used this approach, because they wanted to remove the allometric effects from brain size and not from innovation propensity. This was a valid argument since the original critique assumed a case where $x_1$ and $x_2$ are both causing $y$ [@freckleton2002misuse]. When $x_1$ and $x_2$ are correlated, the use of a residual of $y \sim x_1$ creates a bias. In the case of life history and innovativeness the causal structure is different and this particular problem does not arise. However, in an empirical study measurement error, missing data and phylogenetic covariance still need to be accounted for. When using residuals, uncertainty does not propagate because models are run sequentially. 
 
-Structural equation models allow for the inclusion of measurement error, imputation of missing data and phylogenetic coveriance [@smeele2022coevolution]. Furthermore, the Bayesian implementation is useful in cases with low sample size. Prior information about parameters can be used to increase accuracy. E.g., as brain size can (on average) only increase with body size. The prior for this relationship should therfore be set to only include positive values. This creates a clear advantage over frequentist linear models, which allow any real number and can therefore produce scientifically nonsensical results. 
+Structural equation models allow for the inclusion of measurement error, imputation of missing data and phylogenetic coveriance [@smeele2022coevolution]. Furthermore, the Bayesian implementation is useful in cases with low sample size. Prior information about parameters can be used to increase accuracy. E.g., on average brain size can only increase with body size. The prior for this relationship should therefore be set to only include positive values. This creates a clear advantage over frequentist linear models, which allow any real number and can therefore produce scientifically nonsensical results. 
 
 # Conclusion
 
-The aim of this paper was to show how a case where relative brain size is a response variable differs from a case where it is a predictor variable. From a simple simulation it becomes clear that one cannot include absolute brain size and body size as covariates if relative brain size is theorised to predict the third variable. Multiple other approaches can be used instead and the design of the model should be based on the assumed causal structure of the system. I provide a simple structural equation model, which works for the simulated data. Future studies should make sure all back-door paths are closed for their DAG and potentially include additional components to control for measurement error, missing data and phylogeny.     
+The aim of this paper was to show how a case where relative brain size is a response variable differs from a case where it is a predictor variable. From a simple simulation it becomes clear that one cannot include absolute brain size and body size as covariates if relative brain size is theorised to predict the third variable. Multiple other approaches can be used instead and the design of the model should be based on the assumed causal structure of the system. I provide a simple structural equation model, which works for the simulated data. Future studies should make sure all back-door paths are closed for their DAG and potentially include additional components to control for measurement error, missing data and phylogeny.  The use of these models is not limited to relative brain size, but can be used for any comparative study in which multiple causal paths are of interest.   
 
 **Data accessibility.** All data is generated in the simulation. Code is publicly available at: https://github.com/simeonqs/On_the_use_of_relative_brain_size.
 
