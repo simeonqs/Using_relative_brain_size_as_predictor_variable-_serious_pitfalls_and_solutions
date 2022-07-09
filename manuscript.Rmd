@@ -93,7 +93,7 @@ To show the difference between a case where relative brain size is the *response
 
 I simulated 20 datasets per case and present parameter estimates for all datasets. Frequentist linear models were fitted with the *lm* function from R [@R]. Bayesian models were fitted using the *cmdstanr* package [@cmdstanr], which runs the No U-turn Sampler in Stan [@gelman2015stan] with four chains and default sampler settings (1000 warmup and 1000 sampling iterations). Rhat, divergent transitions and effective sample size were monitored by the package and if issues arose these were reported in the results. 
 
-To test if sample size had an effect on which model performed best, additional simulations were run and analysed for 20 and 1000 species (see supplemental results). To test if more or less informative priors had an effect on which model performed best, and how often the best model included the true effect in the credible interval, additional simulations were run with informative and vague priors (see supplemental materials).
+To test if sample size had an effect on which model performed best, additional simulations were run and analysed for 20 and 1000 species (see Appendix). To test if more or less informative priors had an effect on which model performed best, and how often the best model included the true effect in the credible interval, additional simulations were run with informative and vague priors (see Appendix).
 
 ## Case I: relative brain size as response variable
 
@@ -138,7 +138,7 @@ z & \sim \text{normal}(\mu_z,\ \sigma_z) \\
 
 The model includes a regression for each variable. Body size is not a function of any variable. Brain size is a function of body size. *z* is a function of body size and relative brain size (where relative brain size is the difference between the actual and predicted brain size). Relative brain size in this model is very similar to residual brain size, but since it is computed at each iteration information flows in both directions and measurement error is correctly estimated. The last three lines of the model are the priors for all parameters. Note that the priors for the slopes ($\beta$ and $\gamma$) are set to normal(0, 1), which regularises them slightly and are centred no effect of the predictors. For empirical studies theory might provide more informative priors, which would further increase the accuracy of the model. 
 
-To test how models performed in case of unqual magnitute of the effect of body size and brain size on *z* (case II), additional simulation were run (see supplemental materials) with either strong body size effect ($\beta_\text{body} = 2, \beta_\text{brain} = 0.5$) or strong brain size effect ($\beta_\text{body} = 0.5, \beta_\text{brain} = 2$).
+To test how models performed in case of unqual magnitute of the effect of body size and brain size on *z* (case II), additional simulation were run (see Appendix) with either strong body size effect ($\beta_\text{body} = 2, \beta_\text{brain} = 0.5$) or strong brain size effect ($\beta_\text{body} = 0.5, \beta_\text{brain} = 2$).
 
 To visualise the results I plotted all parameter estimates of the main model (for *z*) and reported the bias (difference between estimate and simulated value) and coverage (proportion of times the true value was within 2SE distance from the estimate). 
 
@@ -146,7 +146,7 @@ To visualise the results I plotted all parameter estimates of the main model (fo
 
 For Case I, where relative brain size was the response variable, both models estimated the parameters very well (see Figure 2, Table 1). For Case II, where relative brain size was a predictor variable, the effect of brain size was estimated well by all models, but the effect of body size was only estimated correctly by the structural equation model (see Figure 3, Table 1). Both the frequentist and Bayesian linear model estimated the effect of body mass to be essentially 0.
 
-Results were similar for simulations with smaller and larger sample sizes (see supplemental materials, Figure S1-4). Results were also similar for models with vague and informative prior (see supplemental materials, Figure S5-8). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the prior centred tightly around the correct value, it estimates the effect to be absent. Also when varying the magnitude of the effects of body size and brain size, the structural equation model was the only model to correctly estimate the effect of body size (see S9-10).
+Results were similar for simulations with smaller and larger sample sizes (see Appendix, Figure 4-7). Results were also similar for models with vague and informative prior (see Appendix, Figure 8-11). The informative priors constrained the Bayesian linear models estimate of the body size effect to positive values, but none of the posterior distributions included the true value of the body size effect. In other words, even if the model is run with the prior centred tightly around the correct value, it estimates the effect to be absent. Also when varying the magnitude of the effects of body size and brain size, the structural equation model was the only model to correctly estimate the effect of body size (see Appendix, Figure 12-13).
 
 ```{r response, include=FALSE}
 # Settings
@@ -429,7 +429,7 @@ knitr::kable(table_combined, format = 'markdown', caption = 'Bias and coverage o
 
 # Discussion 
 
-Several recent studies have claimed to study the effect of relative brain size by including both absolute brain size and body size as predictors [@street2017coevolution; @gonzalez2010large; @isler2009why, @maklakov2011brains, @samia2015brain]. These studies also reported the direct effect of body size and sometimes drew conclusions based on the sign of this effect. Since all these studies used some version of a linear model (be it phylogenetic and/or Bayesian), they actually tested the effect of absolute brain size, since including body size only accounts for allometry in the response variable. The simulations in this paper showed that including body size as additional predictor to control for allometric scaling of brain size works well if relative brain size is the response variable, but not if relative brain size is a predictor variable. Perhaps counter-intuitively, the effect of brain size was still estimated correctly by all models. It was the body size effect that was biased in the linear models. Simulations with a strong body size effect still found a positive coefficient for this effect, but were biased towards lower values (see Figure S9). In simulations with a strong brain size effect the body size coefficients were even negative (see Figure S10).
+Several recent studies have claimed to study the effect of relative brain size by including both absolute brain size and body size as predictors [@street2017coevolution; @gonzalez2010large; @isler2009why, @maklakov2011brains, @samia2015brain]. These studies also reported the direct effect of body size and sometimes drew conclusions based on the sign of this effect. Since all these studies used some version of a linear model (be it phylogenetic and/or Bayesian), they actually tested the effect of absolute brain size, since including body size only accounts for allometry in the response variable. The simulations in this paper showed that including body size as additional predictor to control for allometric scaling of brain size works well if relative brain size is the response variable, but not if relative brain size is a predictor variable. Perhaps counter-intuitively, the effect of brain size was still estimated correctly by all models. It was the body size effect that was biased in the linear models. Simulations with a strong body size effect still found a positive coefficient for this effect, but were biased towards lower values (see Figure 12). In simulations with a strong brain size effect the body size coefficients were even negative (see Figure 13).
 
 One way to create some intuition about what is going on is that absolute brain size (which was the actual predictor variable included in the linear models) contains information about both body size and relative brain size. In a sense this variable controls for part of the body size effect already. In other words, there are two paths from relative brain size (or the unobserved cognitive ability from the DAG) to *z*: one path is direct and one path is a back-door path through the allometric effect of body size. In another case, where body size itself does not have an effect on *z*, it does not actually need to be included at all. In this simple example, using absolute brain size would be fine. The variation in brain size due to allometric scaling would just create noise. However, in empirical studies the causal structure is often more complex, and researchers should always check if using absolute brain size leads to bias. Using absolute brain size would also lead to a less precise estimate of the effect of brain size, so using relative brain size from a structural equation model would still be preferable. 
 
@@ -449,12 +449,563 @@ The aim of this paper was to show how a case where relative brain size is a resp
 
 **Acknowledgements.** I would like to thank all anonymous reviewers for valuable input. Their contribution helped to clarify the manuscript and gain new insights. 
 
-**Data accessibility.** All data is generated in the simulation. Code is publicly available at: https://github.com/simeonqs/On_the_use_of_relative_brain_size.
+**Data accessibility.** All data is generated in the simulation. Code is publicly available at: https://github.com/simeonqs/On_the_use_of_relative_brain_size. Upon acceptance all materials will also be made publicly available on Edmund. 
 
 **Competing interests.** I declare I have no competing interests.
 
 **Funding.** I received funding from the International Max Planck Research School for Quantitative Behaviour, Ecology and Evolution. 
 
 **ORCID:** 0000-0003-1001-6615
+
+# References
+
+::: {#refs}
+:::
+
+\newpage
+
+# Appendix
+
+```{r set-up appendix, include=FALSE}
+# Paths
+path_response_stan = 'models/response.stan' # models
+path_predictor_stan = 'models/predictor.stan'
+path_sem_stan = 'models/sem.stan'
+path_supplemental_models = 'supplemental models' # folder to supplemental models
+path_supplemental_figures = 'supplemental figures' # folder to plot supplemental figures
+path_pdf_response_20 = 'supplemental figures/response 20.pdf' # pdfs
+path_pdf_response_1000 = 'supplemental figures/response 1000.pdf'
+path_pdf_predictor_20 = 'supplemental figures/predictor 20.pdf'
+path_pdf_predictor_1000 = 'supplemental figures/predictor 1000.pdf'
+path_pdf_response_informative = 'supplemental figures/response informative.pdf'
+path_pdf_response_vague = 'supplemental figures/response vague.pdf'
+path_pdf_predictor_informative = 'supplemental figures/predictor informative.pdf'
+path_pdf_predictor_vague = 'supplemental figures/predictor vague.pdf'
+path_pdf_predictor_strong_body = 'supplemental figures/predictor strong body.pdf'
+path_pdf_predictor_strong_brain = 'supplemental figures/predictor strong brain.pdf'
+```
+
+# Supplemental methods
+
+## Sample size
+
+The main text contained results for data sets with 100 species. To see how the models perform with a smaller or larger dataset, I simulated data for 20 and 1000 species, with 20 simulations per case and sample size. 
+
+## Priors
+
+The main text contained results for Bayesian models with slightly regularising priors. In emperical data sets, one can often choose more informative priors. To test the effect of this I analysed the dataset with 100 species with priors that only allow for positive slopes, with the mean set to the simulated value (1). I also restricted the priors for the intecept parameters to normal(0, 0.25).
+
+To further test the robustness of the models I analysed the data with vague priors, settings intercept and slope to normal(0, 10) and standard variation parameters to exponential(0.1) (note that the mean for the exponential distribution is the inverse of the rate, such that the mean standard deviation here is 10).
+
+## Effect magnitude
+
+The main text assumes equal magnitude for the body size and brain size effect. To test how the models performed when the body and brain effects on z are unequal in magnitude, I ran two additional simulations with either strong body size effect ($\beta_\text{body} = 2, \beta_\text{brain} = 0.5$) or strong brain size effect ($\beta_\text{body} = 0.5, \beta_\text{brain} = 2$). All other settings and analysis were the same as in the main text. 
+
+\pagebreak
+
+# Supplemental results
+
+```{r response-sampsize, include=FALSE}
+for(N in c(20, 1000)){
+  # Settings
+  set.seed(1)
+  z_effect = 1
+  body_effect = 1
+  model_response = cmdstan_model(path_response_stan)
+  if(N == 20) ylim = c(0, 5) else ylim = c(0, 15)
+  
+  # Simulate data 20 times
+  out = lapply(1:20, function(i){
+    body_size = rnorm(N, 1, 1)
+    z = rnorm(N, 0, 1)
+    mu_brain = body_effect * body_size + z_effect * z
+    brain_size = rnorm(N, mu_brain, 1)
+    
+    # Run linear model
+    linear_fit = lm(brain_size ~ body_size + z)
+    
+    # Run Bayesian linear model
+    d = list(N = N, brain_size = brain_size, body_size = body_size, z = z) # save data as list
+    bay_linear_fit = model_response$sample(data = d, # run model
+                                           seed = 1, 
+                                           chains = 4, 
+                                           parallel_chains = 4, # runs on four threads
+                                           refresh = 2000)
+    post_linear_fit = bay_linear_fit$draws(format = 'draws_df') # draw posterior samples
+    
+    return(list(linear_fit = linear_fit, post_linear_fit = post_linear_fit))
+  })
+  
+  # Plot the fit
+  pdf(sprintf('%s/response %s.pdf', path_supplemental_figures, N), 6, 5)
+  par(mfrow = c(2,2), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, xlab = '', yaxt = 'n', main = 'linear model')
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect z', 1, 2.5)
+  abline(v = z_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                     summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  mtext('z', 2, 3, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+  abline(v = z_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_z), pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect z', 1, 2.5)
+  
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2], 
+                                     summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  mtext('body', 2, 3, font = 2, las = 2, adj = 0)
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), 
+                       pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  dev.off()
+}
+```
+
+```{r plot response-20, echo=FALSE, out.width = "45%", fig.cap= "Model with sample size 20. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_response_20)
+```
+
+```{r plot response-1000, echo=FALSE, out.width = "45%", fig.cap= "Model with sample size 1000. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_response_1000)
+```
+
+```{r predictor-sampsize, include=FALSE}
+for(N in c(20, 1000)){
+  
+  # Settings
+  set.seed(1)
+  brain_effect = 1
+  body_effect = 1
+  model_predictor = cmdstan_model(path_predictor_stan)
+  model_sem = cmdstan_model(path_sem_stan)
+  if(N == 20) ylim = c(0, 5) else ylim = c(0, 15)
+  
+  # Simulate data
+  out = lapply(1:20, function(i){
+    body_size = rnorm(N, 0, 1)
+    rel_brain_size = rnorm(N, 0, 1)
+    brain_size = 1 * body_size + rel_brain_size
+    mu_z = body_effect * body_size + brain_effect * rel_brain_size
+    z = rnorm(N, mu_z, 1)
+    
+    # Run linear model
+    linear_fit = lm(z ~ body_size + brain_size)
+    
+    # Run Bayesian linear model
+    d = list(N = N, brain_size = brain_size, body_size = body_size, z = z)
+    bay_linear_fit = model_predictor$sample(data = d, 
+                                            seed = 1, 
+                                            chains = 4, 
+                                            parallel_chains = 4,
+                                            refresh = 2000)
+    post_linear_fit = bay_linear_fit$draws(format = 'draws_df')
+    
+    # Run Bayesian SEM
+    bay_sem_fit = model_sem$sample(data = d, 
+                                   seed = 1, 
+                                   chains = 4, 
+                                   parallel_chains = 4,
+                                   refresh = 2000)
+    post_sem_fit = bay_sem_fit$draws(format = 'draws_df')
+    
+    return(list(linear_fit = linear_fit, post_linear_fit = post_linear_fit, post_sem_fit = post_sem_fit))
+  })
+  
+  # Plot the fit
+  pdf(sprintf('%s/predictor %s.pdf', path_supplemental_figures, N), 9, 5)
+  par(mfrow = c(2,3), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'linear model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                     summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect brain size', 1, 2.5)
+  mtext('brain', 2, 4, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_brain), 
+                       pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect relative brain size', 1, 2.5)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'Bayesian SEM model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_brain_z), 
+                       pch = 16, cex = 3, col = alpha('#16A085', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect brain size', 1, 2.5)
+  
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2],
+                                     summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  mtext('body', 2, 4, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), 
+                       pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_body_z), 
+                       pch = 16, cex = 3, col = alpha('#16A085', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  dev.off()
+  
+}
+```
+
+```{r plot predictor-20, echo=FALSE, out.width = "65%", fig.cap= "Model with sample size 20. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model  with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor_20)
+```
+
+```{r plot predictor-1000, echo=FALSE, out.width = "65%", fig.cap= "Model with sample size 1000. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model  with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor_1000)
+```
+
+```{r response-prior, include=FALSE}
+for(prior_type in c('informative', 'vague')){
+  
+  # Settings
+  set.seed(1)
+  N = 20
+  z_effect = 1
+  body_effect = 1
+  model_response = cmdstan_model(sprintf('%s/response_%s.stan', path_supplemental_models, prior_type))
+  ylim = c(0, 5)
+  
+  # Simulate data 20 times
+  out = lapply(1:20, function(i){
+    body_size = rnorm(N, 1, 1)
+    z = rnorm(N, 0, 1)
+    mu_brain = body_effect * body_size + z_effect * z
+    brain_size = rnorm(N, mu_brain, 1)
+    
+    # Run linear model
+    linear_fit = lm(brain_size ~ body_size + z)
+    
+    # Run Bayesian linear model
+    d = list(N = N, brain_size = brain_size, body_size = body_size, z = z) # save data as list
+    bay_linear_fit = model_response$sample(data = d, # run model
+                                           seed = 1, 
+                                           chains = 4, 
+                                           parallel_chains = 4, # runs on four threads
+                                           refresh = 2000)
+    post_linear_fit = bay_linear_fit$draws(format = 'draws_df') # draw posterior samples
+    
+    return(list(linear_fit = linear_fit, post_linear_fit = post_linear_fit))
+  })
+  
+  # Plot the fit
+  pdf(sprintf('%s/response %s.pdf', path_supplemental_figures, prior_type), 6, 5)
+  par(mfrow = c(2,2), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, xlab = '', yaxt = 'n', main = 'linear model')
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect z', 1, 2.5)
+  abline(v = z_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                     summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  mtext('z', 2, 3, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+  abline(v = z_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_z), pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect z', 1, 2.5)
+  
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2], 
+                                     summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  mtext('body', 2, 3, font = 2, las = 2, adj = 0)
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), 
+                       pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  dev.off()
+}
+```
+
+```{r plot response-informative, echo=FALSE, out.width = "45%", fig.cap= "Model with informative priors. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_response_informative)
+```
+
+```{r plot response-vague, echo=FALSE, out.width = "45%", fig.cap= "Model with vague priors. Parameter estimates from the linear model and Bayesian linear model with brain size as response variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_response_vague)
+```
+
+```{r predictor-prior, include=FALSE}
+for(prior_type in c('informative', 'vague')){
+  
+  # Settings
+  set.seed(1)
+  N = 100
+  brain_effect = 1
+  body_effect = 1
+  model_predictor = cmdstan_model(sprintf('%s/predictor_%s.stan', path_supplemental_models, prior_type))
+  model_sem = cmdstan_model(sprintf('%s/sem_%s.stan', path_supplemental_models, prior_type))
+  ylim = c(0, 5)
+  
+  # Simulate data
+  out = lapply(1:20, function(i){
+    body_size = rnorm(N, 0, 1)
+    rel_brain_size = rnorm(N, 0, 1)
+    brain_size = 1 * body_size + rel_brain_size
+    mu_z = body_effect * body_size + brain_effect * rel_brain_size
+    z = rnorm(N, mu_z, 1)
+    
+    # Run linear model
+    linear_fit = lm(z ~ body_size + brain_size)
+    
+    # Run Bayesian linear model
+    d = list(N = N, brain_size = brain_size, body_size = body_size, z = z)
+    bay_linear_fit = model_predictor$sample(data = d, 
+                                            seed = 1, 
+                                            chains = 4, 
+                                            parallel_chains = 4,
+                                            refresh = 2000)
+    post_linear_fit = bay_linear_fit$draws(format = 'draws_df')
+    
+    # Run Bayesian SEM
+    bay_sem_fit = model_sem$sample(data = d, 
+                                   seed = 1, 
+                                   chains = 4, 
+                                   parallel_chains = 4,
+                                   refresh = 2000)
+    post_sem_fit = bay_sem_fit$draws(format = 'draws_df')
+    
+    return(list(linear_fit = linear_fit, post_linear_fit = post_linear_fit, post_sem_fit = post_sem_fit))
+  })
+  
+  # Plot the fit
+  pdf(sprintf('%s/predictor %s.pdf', path_supplemental_figures, prior_type), 9, 5)
+  par(mfrow = c(2,3), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'linear model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                     summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect brain size', 1, 2.5)
+  mtext('brain', 2, 4, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_brain), 
+                       pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect brain size', 1, 2.5)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = 'Bayesian SEM model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_brain_z), 
+                       pch = 16, cex = 3, col = alpha('#16A085', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect relative brain size', 1, 2.5)
+  
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2],
+                                     summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  mtext('body', 2, 4, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), 
+                       pch = 16, cex = 3, col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  plot(NULL, xlim = c(-0.5, 1.5), ylim = ylim, 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_body_z), 
+                       pch = 16, cex = 3, col = alpha('#16A085', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  dev.off()
+  
+}
+```
+
+```{r plot predictor-informative, echo=FALSE, out.width = "65%", fig.cap= "Model with informative priors. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor_informative)
+```
+
+```{r plot predictor-vague, echo=FALSE, out.width = "65%", fig.cap= "Model with vague priors. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple and green density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor_vague)
+```
+
+```{r predictor unequal effect, include=FALSE}
+# Run through magnitudes
+for(i in 1:2){
+  
+  # Settings
+  set.seed(1)
+  N = 100
+  brain_effect = c(0.5, 2)[i]
+  body_effect = c(2, 0.5)[i]
+  model_predictor = cmdstan_model(path_predictor_stan)
+  model_sem = cmdstan_model(path_sem_stan)
+  
+  # Simulate data
+  out = lapply(1:20, function(i){
+    body_size = rnorm(N, 0, 1)
+    rel_brain_size = rnorm(N, 0, 1)
+    brain_size = 1 * body_size + rel_brain_size
+    mu_z = body_effect * body_size + brain_effect * rel_brain_size
+    z = rnorm(N, mu_z, 1)
+    
+    # Run linear model
+    linear_fit = lm(z ~ body_size + brain_size)
+    
+    # Run Bayesian linear model
+    d = list(N = N, brain_size = brain_size, body_size = body_size, z = z)
+    bay_linear_fit = model_predictor$sample(data = d, 
+                                            seed = 1, 
+                                            chains = 4, 
+                                            parallel_chains = 4,
+                                            refresh = 2000)
+    post_linear_fit = bay_linear_fit$draws(format = 'draws_df')
+    
+    # Run Bayesian SEM
+    bay_sem_fit = model_sem$sample(data = d, 
+                                   seed = 1, 
+                                   chains = 4, 
+                                   parallel_chains = 4,
+                                   refresh = 2000)
+    post_sem_fit = bay_sem_fit$draws(format = 'draws_df')
+    
+    return(list(linear_fit = linear_fit, 
+                post_linear_fit = post_linear_fit, 
+                post_sem_fit = post_sem_fit,
+                body_size = body_size,
+                brain_size = brain_size))
+  })
+  
+  # Plot the fit
+  pdf(sprintf('%s/predictor %s.pdf', path_supplemental_figures, c('strong body', 'strong brain')[i]), 9, 5)
+  par(mfrow = c(2,3), oma = c(1, 4, 1, 1), mar = c(4, 1, 2, 3))
+  plot(NULL, xlim = c(-4, 4), ylim = c(0, 5), 
+       xlab = '', yaxt = 'n', main = 'linear model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[3],
+                                     summary(out[[i]]$linear_fit)$coefficients[3,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect brain size', 1, 2.5)
+  mtext('brain', 2, 4, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-4, 4), ylim = c(0, 5), 
+       xlab = '', yaxt = 'n', main = 'Bayesian linear model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_brain), pch = 16, cex = 3, 
+                       col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect brain size', 1, 2.5)
+  plot(NULL, xlim = c(-4, 4), ylim = c(0, 5), 
+       xlab = '', yaxt = 'n', main = 'Bayesian SEM model')
+  abline(v = brain_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_brain_z), pch = 16, cex = 3, 
+                       col = alpha('#16A085', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect relative brain size', 1, 2.5)
+  
+  plot(NULL, xlim = c(-4, 4), ylim = c(0, 5), 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(rnorm(1e5, out[[i]]$linear_fit$coefficients[2],
+                                     summary(out[[i]]$linear_fit)$coefficients[2,2])), 
+                       pch = 16, cex = 3, col = alpha('#D68910', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  mtext('body', 2, 4, font = 2, las = 2, adj = 0)
+  plot(NULL, xlim = c(-4, 4), ylim = c(0, 5), 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_linear_fit$b_body), pch = 16, cex = 3, 
+                       col = alpha('#7D3C98', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  plot(NULL, xlim = c(-4, 4), ylim = c(0, 5), 
+       xlab = '', yaxt = 'n', main = '')
+  abline(v = body_effect, lty = 2, lwd = 5, col = alpha('black', 0.5))
+  for(i in 1:20) lines(density(out[[i]]$post_sem_fit$b_body_z), pch = 16, cex = 3, 
+                       col = alpha('#16A085', 0.5))
+  axis(4)
+  mtext('density', 4, 2.5)
+  mtext('effect body size', 1, 2.5)
+  dev.off()
+  
+} # end i loop
+```
+
+```{r plot predictor-strong-body, echo=FALSE, out.width = "65%", fig.cap= "Model with strong effect of body size and weak effect of brain size. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor_strong_body)
+```
+
+```{r plot predictor-strong-brain, echo=FALSE, out.width = "65%", fig.cap= "Model with strong effect of brain size and weak effect of body size. Parameter estimates from the linear model, Bayesian linear model and Bayesian strucutral equation model with relative brain size as predictor variable. Dashed grey line is the true value. Orange density plots are normal distributions based on the mean and SE from the linear model. Purple density plots are the posterior distributions from the Bayesian models."}
+knitr::include_graphics(path_pdf_predictor_strong_brain)
+```
 
 # References
