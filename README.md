@@ -40,6 +40,8 @@ All models can be run within seconds on a normal PC. The compilation of the Baye
 - supplemental figures/predictor 1000.pdf: pdf of the results for relative brain size as predictor variable with a sample size of 1000
 - supplemental figures/predictor 20.pdf: pdf of the results for relative brain size as predictor variable with a sample size of 20
 - supplemental figures/predictor informative.pdf: pdf of the results for relative brain size as predictor variable with informative priors
+- supplemental figures/predictor strong brain.pdf: pdf of the results with a strong brain size effect
+supplemental figures/predictor strong body.pdf: pdf of the results with a strong body size effect
 - supplemental figures/predictor vague.pdf: pdf of the results for relative brain size as predictor variable with vague priors
 - supplemental figures/response 1000.pdf: pdf of the results for relative brain size as response variable with a sample size of 1000
 - supplemental figures/response 20.pdf: pdf of the results for relative brain size as response variable with a sample size of 20
@@ -63,10 +65,8 @@ All models can be run within seconds on a normal PC. The compilation of the Baye
 - On_the_use_of_relative_brain_size.Rproj: R project file, if code is opened from this project the working directory is set automatically
 - README.md: markdown file with all information for this repository
 - bibliography.bib: BibTex file with all references
-- manuscript.Rmd: Rmarkdown file to compile the manuscript, including generating data and results
+- manuscript.Rmd: Rmarkdown file to compile the manuscript, including generating data and results, includes the Appendix with supplemental methods and results
 - manuscript.pdf: pdf version of the main text
-- supplemental materials.Rmd: Rmarkdown file to compile the supplemental materials, including generating data and results
-- supplemental-materials.pdf: pdf version of the supplemental materials
 
 ------------------------------------------------
 
