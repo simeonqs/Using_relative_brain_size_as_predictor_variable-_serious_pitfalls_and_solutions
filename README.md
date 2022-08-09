@@ -3,8 +3,9 @@
 This repo is associated with the following article: 
 
 ```
-Smeele, Simeon Q. "On the use of relative brain size." bioRxiv (2022).
+Smeele, Simeon Q. "Using relative brain size as predictor variable: serious pitfalls and solutions." bioRxiv (2022).
 ```
+Previous title was: `On the use of relative brain size`.
 
 All results can be reproduced by running *manuscript.Rmd*. This rmarkdown contains all R code to generate and analyse the data. 
 
@@ -44,6 +45,7 @@ All models can be run within seconds on a normal PC. The compilation of the Baye
 supplemental figures/predictor strong body.pdf: pdf of the results with a strong body size effect
 - supplemental figures/predictor vague.pdf: pdf of the results for relative brain size as predictor variable with vague priors
 - supplemental figures/response 1000.pdf: pdf of the results for relative brain size as response variable with a sample size of 1000
+- supplemental figures/response case iii.pdf: pdf of the results for relative brain size as response variable with an additional path from body to *z*
 - supplemental figures/response 20.pdf: pdf of the results for relative brain size as response variable with a sample size of 20
 - supplemental figures/response informative.pdf: pdf of the results for relative brain size as response variable with informative priors
 - supplemental figures/response vague.pdf: pdf of the results for relative brain size as response variable with vague priors
@@ -62,7 +64,7 @@ supplemental figures/predictor strong body.pdf: pdf of the results with a strong
 - supplemental models/sem_vague.stan: Stan code for the structural equation model of Case II with vague priors
 
 - .gitignore: file that tells Git which files should not be tracked
-- On_the_use_of_relative_brain_size.Rproj: R project file, if code is opened from this project the working directory is set automatically
+- Using_relative_brain_size_as_predictor_variable-_serious_pitfalls_and_solutions.Rproj: R project file, if code is opened from this project the working directory is set automatically
 - README.md: markdown file with all information for this repository
 - bibliography.bib: BibTex file with all references
 - manuscript.Rmd: Rmarkdown file to compile the manuscript, including generating data and results, includes the Appendix with supplemental methods and results
@@ -72,11 +74,9 @@ supplemental figures/predictor strong body.pdf: pdf of the results with a strong
 
 # Session info
 
-R version 4.1.0 (2021-05-18) 
-
-Platform: x86_64-apple-darwin17.0 (64-bit)
-
-Running under: macOS Catalina 10.15.7
+R version 4.1.0 (2021-05-18)
+Platform: x86_64-apple-darwin17.0 (64-bit)
+Running under: macOS Catalina 10.15.7
 
 Packages: scales_1.1.1, cmdstanr_0.4.0
 
