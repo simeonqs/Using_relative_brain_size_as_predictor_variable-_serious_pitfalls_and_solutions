@@ -7,9 +7,7 @@ Smeele, Simeon Q. "Using relative brain size as predictor variable: serious pitf
 ```
 Previous title was: `On the use of relative brain size`.
 
-All results can be reproduced by running *manuscript.Rmd*. This rmarkdown contains all R code to generate and analyse the data. 
-
-**Note:** I'm currently revising the manuscript for resubmission. An updated repo with complete file overview will be online soon.
+All results can be reproduced by running **manuscript.Rmd**. This rmarkdown contains all R code to generate and analyse the data. 
 
 ------------------------------------------------
 
@@ -75,8 +73,10 @@ supplemental figures/predictor strong body.pdf: pdf of the results with a strong
 # Session info
 
 R version 4.1.0 (2021-05-18)
-Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Catalina 10.15.7
+
+Platform: x86_64-apple-darwin17.0 (64-bit)
+
+Running under: macOS Catalina 10.15.7
 
 Packages: scales_1.1.1, cmdstanr_0.4.0
 
