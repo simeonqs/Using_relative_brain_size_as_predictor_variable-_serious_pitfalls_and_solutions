@@ -15,7 +15,7 @@ All results can be reproduced by running **manuscript.Rmd**. This rmarkdown cont
 
 To run the Bayesian models *Stan* needs to be installed. This is not an R package, but *Stan* can be run from R. For installation see: https://mc-stan.org/users/interfaces/. 
 
-The R code requires two libraries: *cmdstanr* to run the Stan engine and *scales* for transparent colours. Both can be installed from CRAN. To finish installing *cmdstanr* see: https://mc-stan.org/cmdstanr/. 
+The R code requires three libraries: *cmdstanr* to run the Stan engine, *scales* for transparent colours and *knitr* for the compilation of the pdf. All three can be installed from CRAN. To finish installing *cmdstanr* see: https://mc-stan.org/cmdstanr/. 
 
 All models can be run within seconds on a normal PC. The compilation of the Bayesian models might take up to a minute the first time code is run, unless the compiled models are also downloaded. Models run on 4 threads. If your computer has less computing power, models can also be run on a single thread. For this change the *parallel_chains* setting for all fitting calls in the markdown. 
 
