@@ -3,7 +3,7 @@
 This repo is associated with the following article: 
 
 ```
-Smeele, Simeon Q. "Using relative brain size as predictor variable: serious pitfalls and solutions." bioRxiv (2022).
+Smeele, Simeon Q. "Using relative brain size as predictor variable: Serious pitfalls and solutions." Ecology and Evolution 12.9 (2022): e9273.
 ```
 Previous title was: `On the use of relative brain size`.
 
